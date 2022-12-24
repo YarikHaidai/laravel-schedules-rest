@@ -9,18 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 class ScheduleSearchService extends AbstractSearchService
 {
     /**
-     * @var array|string[]
-     */
-    protected array $whereFilters = [
-        'status'
-    ];
-
-    /**
      * @var array
      */
     protected array $scopeFilters = [
-        'created_at_from',
-        'created_at_to'
+        'date_start',
+        'date_end'
     ];
 
     /**
@@ -30,5 +23,4 @@ class ScheduleSearchService extends AbstractSearchService
     {
         return new Schedule();
     }
-
 }

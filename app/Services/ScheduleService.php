@@ -5,7 +5,9 @@ namespace App\Services;
 use App\Models\Constants\ScheduleConstants;
 use App\Models\Schedule;
 use App\Repositories\ScheduleRepository;
+use App\Services\Search\ScheduleSearchService;
 use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -17,11 +19,27 @@ class ScheduleService
     private ScheduleRepository $repository;
 
     /**
-     * @param ScheduleRepository $repository
+     * @var ScheduleSearchService
      */
-    public function __construct(ScheduleRepository $repository)
+    private ScheduleSearchService $searchService;
+
+    /**
+     * @param ScheduleRepository $repository
+     * @param ScheduleSearchService $search
+     */
+    public function __construct(ScheduleRepository $repository, ScheduleSearchService $search)
     {
         $this->repository = $repository;
+        $this->searchService = $search;
+    }
+
+    /**
+     * @param Request $request
+     * @return LengthAwarePaginator
+     */
+    public function search(Request $request): LengthAwarePaginator
+    {
+        return $this->searchService->search($request);
     }
 
     /**
