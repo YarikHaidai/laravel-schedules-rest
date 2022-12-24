@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Schedule\ScheduleStoreRequest;
+use App\Http\Requests\V1\Schedule\ScheduleUpdateRequest;
 use App\Http\Resources\V1\Schedule\ScheduleResource;
 use App\Models\Schedule;
 use App\Services\ScheduleService;
-use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response as ResponseApi;
 
 class ScheduleController extends Controller
 {
@@ -43,6 +44,27 @@ class ScheduleController extends Controller
     }
 
     /**
+     * @param ScheduleUpdateRequest $request
+     * @param Schedule $schedule
+     * @return ScheduleResource|ResponseApi
+     *
+     * @group Schedule
+     * @authenticated
+     * @apiResource App\Http\Resources\Schedule\ScheduleResource
+     * @apiResourceModel App\Models\Schedule
+     */
+    public function update(ScheduleUpdateRequest $request, Schedule $schedule): ScheduleResource|ResponseApi
+    {
+        $isCanRemove = $this->service->isCanBeUpdatedOrRemoved($schedule);
+        if (!$isCanRemove) {
+            return response()->json(['message' => 'Can`t be updated!'], ResponseApi::HTTP_BAD_REQUEST);
+        }
+        $this->service->update($schedule, $request);
+
+        return new ScheduleResource($schedule);
+    }
+
+    /**
      * @param Schedule $schedule
      * @return ScheduleResource
      *
@@ -57,18 +79,23 @@ class ScheduleController extends Controller
     }
 
     /**
-     * @param Schedule $Schedule
-     * @return ScheduleResource
+     * @param Schedule $schedule
+     * @return ResponseApi
      *
      * @group Schedule
      * @authenticated
      * @apiResource App\Http\Resources\Schedule\ScheduleResource
      * @apiResourceModel App\Models\Schedule
      */
-    public function destroy(Schedule $Schedule): ScheduleResource
+    public function destroy(Schedule $schedule): ResponseApi
     {
-        $Schedule->delete();
+        $isCanRemove = $this->service->isCanBeUpdatedOrRemoved($schedule);
+        if (!$isCanRemove) {
+            return response()->json(['message' => 'Can`t be removed!'], ResponseApi::HTTP_BAD_REQUEST);
+        }
 
-        return new ScheduleResource($Schedule);
+        $schedule->delete();
+
+        return response()->json();
     }
 }

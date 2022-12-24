@@ -74,6 +74,7 @@ class Kernel extends HttpKernel
         'auth' => [
             'throttle:api',
             SubstituteBindings::class,
+            Authenticate::class,
         ],
     ];
 

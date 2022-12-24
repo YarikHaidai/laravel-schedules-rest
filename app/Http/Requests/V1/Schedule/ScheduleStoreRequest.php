@@ -2,32 +2,32 @@
 
 namespace App\Http\Requests\V1\Schedule;
 
-use App\Http\Requests\AbstractStoreRequest;
+use App\Rules\V1\Schedule\IsCanStoreRule;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class ScheduleStoreRequest extends AbstractStoreRequest
+class ScheduleStoreRequest extends FormRequest
 {
-    use ScheduleBasicRequest;
-
     /**
      * @return array
      */
-    public function basicRules(): array
+    public function validationData(): array
     {
-        dd(Auth::check());
-
-        return $this->scheduleRules();
+        $this->merge(['user_id' => Auth::check() ? Auth::id() : null]);
+        return $this->all();
     }
 
     /**
      * @return array
      */
-    public function required(): array
+    public function rules(): array
     {
         return [
-            'title',
-            'date_start',
-            'duration'
+            'title'       => ['string', 'max:190', 'required'],
+            'description' => ['string', 'nullable'],
+            'duration'    => ['numeric', 'min:10', 'required'],
+            'date_start'  => ['date_format:Y-m-d H:i:s', 'required', 'after_or_equal:now', new IsCanStoreRule()]
         ];
     }
+
 }
