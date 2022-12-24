@@ -20,6 +20,15 @@ class RouteServiceProvider extends ServiceProvider
     public const HOME = '/home';
 
     /**
+     * The controller namespace for the application.
+     *
+     * When present, controller route declarations will automatically be prefixed with this namespace.
+     *
+     * @var string|null
+     */
+    protected $namespace = 'App\\Http\\Controllers\\Api';
+
+    /**
      * Define your route model bindings, pattern filters, and other route configuration.
      *
      * @return void
@@ -32,6 +41,12 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('api')
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
+
+            Route::prefix('api/v1')
+                ->middleware('auth')
+                ->name('api.')
+                ->namespace("{$this->namespace}\V1")
+                ->group(base_path('routes/api_v1.php'));
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
