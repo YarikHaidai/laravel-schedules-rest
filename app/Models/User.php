@@ -5,8 +5,21 @@ namespace App\Models;
 use App\Models\Traits\HasUUID;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Carbon;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * Class User
+ * @package App\Models
+ *
+ * @property string $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ *
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use HasUUID;
