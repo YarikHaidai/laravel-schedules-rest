@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\V1\Auth;
 
-use App\Http\Requests\Request;
+use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends Request
+class LoginRequest extends FormRequest
 {
     /**
      * @return array

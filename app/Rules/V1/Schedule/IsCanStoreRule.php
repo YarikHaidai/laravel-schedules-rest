@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Rules\V1;
+namespace App\Rules\V1\Schedule;
 
 use App\Models\Schedule;
 use Carbon\Carbon;
@@ -52,7 +52,7 @@ class IsCanStoreRule implements DataAwareRule, Rule
             // Unauthorized user creation is prohibited if time overlaps
             return !Schedule::whereBetween('date_start', [$this->data['date_start'], $this->data['date_end']])
                 ->orWhereBetween('date_end', [$this->data['date_start'], $this->data['date_end']])
-                ->exist();
+                ->exists();
         }
 
         // Authorized user is allowed to cross dates
