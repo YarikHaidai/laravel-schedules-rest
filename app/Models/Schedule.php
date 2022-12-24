@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Models\Traits\HasUUID;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -46,5 +46,25 @@ class Schedule extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @param Builder $query
+     * @param $dateStart
+     * @return Builder
+     */
+    public function scopeDateStart(Builder $query, $dateStart): Builder
+    {
+        return $query->where('date_start', '>=', $dateStart);
+    }
+
+    /**
+     * @param Builder $query
+     * @param $dateEnd
+     * @return Builder
+     */
+    public function scopeDateEnd(Builder $query, $dateEnd): Builder
+    {
+        return $query->where('date_end', '<=', $dateEnd);
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\Schedule\ScheduleListRequest;
 use App\Http\Requests\V1\Schedule\ScheduleStoreRequest;
 use App\Http\Requests\V1\Schedule\ScheduleUpdateRequest;
+use App\Http\Resources\V1\Schedule\ScheduleCollection;
 use App\Http\Resources\V1\Schedule\ScheduleResource;
 use App\Models\Schedule;
 use App\Services\ScheduleService;
@@ -24,6 +26,17 @@ class ScheduleController extends Controller
     public function __construct(ScheduleService $service)
     {
         $this->service = $service;
+    }
+
+    /**
+     * @param ScheduleListRequest $request
+     * @return ScheduleCollection
+     */
+    public function index(ScheduleListRequest $request): ScheduleCollection
+    {
+        $list = $this->service->search($request);
+
+        return new ScheduleCollection($list);
     }
 
     /**

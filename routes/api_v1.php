@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 // Auth required
 Route::group(['middleware' => 'auth', 'prefix' => 'schedules'], function () {
+    Route::post('/list', 'ScheduleController@index')->name('schedules.index');
     Route::post('/', 'ScheduleController@store')->name('schedules.store');
     Route::patch('/{schedule}', 'ScheduleController@update')->name('schedules.update');
     Route::get('/{schedule}', 'ScheduleController@show')->name('schedules.show');
